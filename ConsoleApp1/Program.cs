@@ -3,7 +3,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 
-namespace ConsoleApp1
+namespace ConsoleUI
 {
     internal class Program
     {
@@ -12,7 +12,7 @@ namespace ConsoleApp1
             // Date Transformation Object - DTO
             // IoC
             ProductTest();
-            //CategoryTest();
+            // CategoryTest();
 
 
         }
@@ -30,11 +30,26 @@ namespace ConsoleApp1
         private static void ProductTest()
         {
             ProductManager productManager = new ProductManager(new EfProductDal());
-
-            foreach (var product in productManager.GetProductDetails())
+            
+            var result = productManager.GetProductDetails();
+            
+            if (result.Success == true)
             {
-                Console.WriteLine("Ürün İsmi: " + product.ProductName, "/", product.CategoryName);
+                foreach (var product in result.Data)
+                {
+                    Console.WriteLine("Ürün İsmi: " + product.ProductName + " - " + "Kategori: " + product.CategoryName);
+                    Console.WriteLine(result.Message);
+                }
             }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+            
+            // foreach (var product in productManager.GetProductDetails().Data)
+            // {
+            //     Console.WriteLine("Ürün İsmi: " + product.ProductName + " - " + "Kategori: " + product.CategoryName);
+            // }
         }
 
     }
