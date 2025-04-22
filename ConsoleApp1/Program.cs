@@ -21,30 +21,30 @@ namespace ConsoleUI
         {
             CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
 
-            foreach (var category in categoryManager.GetAll())
-            {
-                Console.WriteLine("Kategori İsmi: " + category.CategoryName);
-            }
+            // foreach (var category in categoryManager.GetAll())
+            // {
+            //     Console.WriteLine("Kategori İsmi: " + category.CategoryName);
+            // }
         }
 
         private static void ProductTest()
         {
-            ProductManager productManager = new ProductManager(new EfProductDal());
-            
-            var result = productManager.GetProductDetails();
-            
-            if (result.Success == true)
-            {
-                foreach (var product in result.Data)
-                {
-                    Console.WriteLine("Ürün İsmi: " + product.ProductName + " - " + "Kategori: " + product.CategoryName);
-                    Console.WriteLine(result.Message);
-                }
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
+            // ProductManager productManager = new ProductManager(new EfProductDal());
+            //
+            // var result = productManager.GetProductDetails();
+            //
+            // if (result.Success == true)
+            // {
+            //     foreach (var product in result.Data)
+            //     {
+            //         Console.WriteLine("Ürün İsmi: " + product.ProductName + " - " + "Kategori: " + product.CategoryName);
+            //         Console.WriteLine(result.Message);
+            //     }
+            // }
+            // else
+            // {
+            //     Console.WriteLine(result.Message);
+            // }
             
             // foreach (var product in productManager.GetProductDetails().Data)
             // {
