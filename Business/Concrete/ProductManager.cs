@@ -5,6 +5,7 @@ using Entities.Concrete;
 using Entities.DTOS;
 using System.Collections.Generic;
 using System.Linq;
+using Business.BusinessAspects.Autofac;
 using Business.CCS;
 using Business.Constans;
 using Business.ValidationRules.FluentValidation;
@@ -28,6 +29,7 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
+        [SecuredOperation("product.add, admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
@@ -48,7 +50,7 @@ namespace Business.Concrete
             IResult result = BusinessRules.Run(
                 CheckProductNameIsUsed(product.ProductName), 
                             CheckProductNameIsUsed(product.ProductName),
-                            CheckIfCategoryLimitExceded());
+                            CheckIfCategoryLimitExceeded());
             
             if (result != null)
             {
@@ -59,7 +61,8 @@ namespace Business.Concrete
 
             return new ErrorResult(Messages.ProductCountOfCategoryError);
         }
-
+        
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Update(Product product)
         {
             _productDal.Update(product);
@@ -118,7 +121,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IResult CheckIfCategoryLimitExceded()
+        private IResult CheckIfCategoryLimitExceeded()
         {
             var result = _categoryService.GetAll();
             if (result.Data.Count > 15)
