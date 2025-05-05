@@ -5,10 +5,13 @@ using Entities.Concrete;
 using Entities.DTOS;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using Business.BusinessAspects.Autofac;
 using Business.CCS;
 using Business.Constans;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
@@ -31,6 +34,7 @@ namespace Business.Concrete
 
         [SecuredOperation("product.add, admin")]
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Product product)
         {
             // validation - doğrulama *nesnenin doğru olup olmadığını kontrol eder.*
@@ -63,12 +67,31 @@ namespace Business.Concrete
         }
         
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Update(Product product)
         {
             _productDal.Update(product);
             return new SuccessResult(Messages.ProductAdded);
         }
 
+        [TransactionScopeAspect] // TransactionScope
+        public IResult AddTransactionalTest(Product product)
+        {
+            
+            Add(product);
+
+            if (product.UnitPrice < 10)
+            {
+                throw new Exception("");
+            }
+
+            Add(product);
+            
+
+            return null;
+        }
+
+        [CacheAspect] // Key,Value
         public IDataResult<List<Product>> GetAll()
         {
             //if (DateTime.Now.Hour == 22)
@@ -94,7 +117,8 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(), Messages.ProductListed);
         }
-
+        
+        [CacheAspect]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductID == productId), Messages.ProductListed);

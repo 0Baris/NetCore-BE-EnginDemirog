@@ -20,7 +20,7 @@ namespace Business.ValidationRules.FluentValidation
             
             // Ürün a harfi ile başlamalı
             // kurallar hariç bir kural yazmak
-            RuleFor(p=> p.ProductName).Must(StartWithA).WithMessage("Ürünler A harfi ile başlamalı");
+            //RuleFor(p=> p.ProductName).Must(StartWithA).WithMessage("Ürünler A harfi ile başlamalı");
         }
 
         private bool StartWithA(string arg)
