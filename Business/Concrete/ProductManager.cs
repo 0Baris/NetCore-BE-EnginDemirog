@@ -34,7 +34,7 @@ namespace Business.Concrete
 
         [SecuredOperation("product.add, admin")]
         [ValidationAspect(typeof(ProductValidator))]
-        [CacheRemoveAspect("IProductService.Get")]
+        //[CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Product product)
         {
             // validation - doğrulama *nesnenin doğru olup olmadığını kontrol eder.*
@@ -67,7 +67,7 @@ namespace Business.Concrete
         }
         
         [ValidationAspect(typeof(ProductValidator))]
-        [CacheRemoveAspect("IProductService.Get")]
+        //[CacheRemoveAspect("IProductService.Get")]
         public IResult Update(Product product)
         {
             _productDal.Update(product);
@@ -91,7 +91,7 @@ namespace Business.Concrete
             return null;
         }
 
-        [CacheAspect] // Key,Value
+        //[CacheAspect] // Key,Value
         public IDataResult<List<Product>> GetAll()
         {
             //if (DateTime.Now.Hour == 22)
@@ -118,7 +118,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(), Messages.ProductListed);
         }
         
-        [CacheAspect]
+        //[CacheAspect]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductID == productId), Messages.ProductListed);

@@ -21,13 +21,24 @@ namespace WebAPI
             builder.Services.AddControllers();
 
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
+
             // Autofac ile classlar i�inde yapt�k
             // IProductService isteniyorsa ona ProductManager de�erini ver.
             // ��erisinde data olmad��� takdirde tutulabilir.
             //builder.Services.AddSingleton<IProductService,ProductManager>();
             //builder.Services.AddSingleton<IProductDal, EfProductDal >();
-            
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
+
             var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -70,6 +81,8 @@ namespace WebAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAll");
 
             app.UseRouting();
             
